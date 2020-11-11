@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Concord Academy Course Drop/Add</title>
+  <style>
+    h1 {
+      text-align: center;
+    }
+
+    body {
+      background-color: #A3CB8C;
+    }
+
+    label {
+      font-weight: bold;
+      font-family: sans-serif;
+      font-size: 15px;
+      width: 50%;
+      display: inline-block;
+      text-align: right;
+      padding: 3px;
+    }
+
+    /* #addWrapper {
+        display: inline-block;
+      }
+
+      #dropWrapper {
+        display: inline-block;
+      }*/
+
+    .addbuttonWrapper {
+      /* display: inline-block; */
+      text-align: center;
+    }
+
+    input[type=submit] {
+      display: block;
+    }
+
+    #parentcourse {
+      border: 3px solid #73AD21;
+      padding: 15px;
+      height:500px;
+      width:600px;
+      overflow-y: scroll;
+      /* margin: auto; */
+      margin-left: auto;
+      margin-right: auto;
+
+    }
+
+    #coursetable {
+      background-color: #ECFFE1;
+      text-align: center;
+      margin:auto;
+      width:600px;
+      column-count: 2;
+      column-gap: 100px;
+
+
+    }
+
+    table {
+
+      /* margin:auto; */
+
+
+    }
+
+    tr:nth-child(even) {
+      background-color: #DBF0CD;
+    }
+
+    h3 {
+      text-align: center;
+
+    }
+
+    legend {
+      font-family: Helvetica;
+      font-size: 20px;
+      text-align: center;
+      padding: 10px;
+    }
+
+    /* label[for="id_addCourseBlock"] {
+      color: white;
+    } */
+
+    /* label[for="id_gradeYear"] {
+        color;
+      } */
+  </style>
+</head>
+<h1>Concord Academy Course Drop/Add</h1>
+
+<body>
+  <h3>Available Courses</h3>
+      <div id=parentcourse>
+        <div id=coursetable>
+          <table>
+            <tr>
+              <th>Course Name</th>
+              <th>Course Code</th>
+              <th>Term</th>
+              <th>Credit</th>
+
+            </tr>
+            {% for thiscourse in allCourses %}
+              <tr>
+                <td>
+                  {{thiscourse.coursename}}
+                </td>
+                <td>
+                  {{thiscourse.courseid}}
+                </td>
+                <td>
+                  {{thiscourse.courseblock}}
+                </td>
+                <td>
+                  {{thiscourse.coursecredit}}
+                </td>
+              </tr>
+
+            {% endfor %}
+
+          </table>
+        </div>
+      </div>
+    </fieldset>
+  <form method='POST' action='/submitForm/'>
+
+    {% csrf_token %}
+    {{ error|default:'' }}
+    {{ form.errors }}
+    {{ form.non_field_errors }}
+
+    <fieldset>
+      <legend>Form Submission</legend>
+
+      <div id="nameWrapper">
+        <label for="id_fName">First Name:</label> {{ form.fName }}
+        <label for="id_lName">Last Name:</label> {{ form.lName }}
+        <label for="id_advisorName">Advisor's Name:</label> {{ form.advisorName}}
+        <label for="id_gradeYear">Grade:</label> {{ form.gradeYear}}
+      </div>
+
+      <div id="addWrapper">
+      </div>
+
+      <div class="addbuttonWrapper">
+        <input type="button" id="addButton" value="add">
+      </div>
+
+      <div id="dropWrapper">
+      </div>
+
+      <div class="addbuttonWrapper">
+        <input type="button" id="addButtonfordrop" value="add">
+      </div>
+
+      <input type='submit' value='Submit' />
+    </fieldset>
+  </form>
+  <script>
+    let addButton = document.querySelector("#addButton"); // Button to start it all.
+    let addWrapper = document.querySelector("#addWrapper"); // Container for all lines, existing and to be made new.
+    // let courseblockoption = document.querySelector(".courseblockline"); // We're using this as a template for future lines.
+    let coursestring =
+      `<label for="id_addCourse">Add a course:</label> {{ form.addCourse }}
+          <label for="id_addCourseBlock">Block:</label> {{ form.addCourseBlock }}
+          <label for="id_addCourseTerm">Term:</label> {{form.addCourseTerm}}
+          <input type="button" class="coursedelete" value="delete">`;
+
+    let addButtonfordrop = document.querySelector("#addButtonfordrop");
+    let addWrapperfordrop = document.querySelector("#dropWrapper");
+    let coursestringfordrop =
+      `<label for="id_dropCourse">Drop a course:</label> {{ form.dropCourse }}
+          <label for="id_dropCourseBlock">Block:</label> {{ form.dropCourseBlock }}
+          <label for="id_dropCourseTerm">Term:</label> {{form.dropCourseTerm}}
+          <input type="button" class="coursedelete" value="delete">`;
+
+    // addWrapper.querySelector(".coursedelete").addEventListener("click", function() {
+    //   addWrapper.removeChild(courseblockoption)
+    // });
+    addButton.addEventListener("click", function () {
+      //templateHtml = courseblockoption.innerHTML; // Get template html as one big string.
+      let newDiv = document.createElement("div"); // Create a new div to house the new stuff.
+      // newDiv.classList.add("courseblockline"); // Add the class for the new div.
+      //newDiv.innerHTML = templateHtml; // Dump the template html string into the new div.
+      newDiv.innerHTML = coursestring;
+      addWrapper.appendChild(newDiv); // Add the new div into the existing DOM. (Visible html.)
+      newDiv.querySelector(".coursedelete").addEventListener("click", function () {
+        addWrapper.removeChild(newDiv)
+      });
+    });
+    addButton.click();
+
+    addButtonfordrop.addEventListener("click", function () {
+      let newdivfordrop = document.createElement("div");
+      newdivfordrop.innerHTML = coursestringfordrop;
+      addWrapperfordrop.appendChild(newdivfordrop);
+      newdivfordrop.querySelector(".coursedelete").addEventListener("click", function () {
+        addWrapperfordrop.removeChild(newdivfordrop)
+      });
+    });
+    addButtonfordrop.click();
+  </script>
+</body>
+
+</html>

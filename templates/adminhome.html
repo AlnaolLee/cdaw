@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Concord Academy Course Drop/Add Admin Page</title>
+  <style>
+  </style>
+</head>
+
+  <div id=partentsubmission>
+    <div id=submissions>
+      <table>
+
+        {% for thislist in subList %}
+          <tr id= "{{ thislist.id }}">
+            <td>
+              {{thislist.fName}}
+            </td>
+            <td>
+              {{thislist.lName}}
+            </td>
+            <td>
+              {{thislist.advisorName}}
+            </td>
+            <td>
+              {{thislist.gradeYear}}
+            </td>
+          </tr>
+
+        {% endfor %}
+
+      </table>
+    </div>
+  </div>
+
+
+
+</html>
